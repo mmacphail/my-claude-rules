@@ -53,7 +53,7 @@ Creates Docker Compose files and a `.env.example` for local development:
 | Dev Postgres | 6432 | Persistent named volume |
 | Test Postgres | 6433 | tmpfs (ephemeral) |
 
-### create-malky-skill
+### malky-skill-creator
 
 A meta-skill that documents how to create new Claude Code skills following consistent conventions (naming, structure, SKILL.md format).
 

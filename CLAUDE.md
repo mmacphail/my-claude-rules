@@ -15,7 +15,7 @@ malky-api-scaffolder (master orchestrator)
 ├── malky-rust-scaffolder  (Rust/Axum/SQLx API crate)
 └── malky-infra-scaffolder (Docker Compose for dev/test Postgres)
 
-create-malky-skill (standalone meta-skill for creating new skills)
+malky-skill-creator (standalone meta-skill for creating new skills)
 ```
 
 **`malky-api-scaffolder`** is the primary entry point. Its `scaffold.py` calls the two sub-scaffolders, then adds workspace glue: root `Cargo.toml` (with `[workspace.dependencies]`), `justfile`, `README.md`, `.gitignore`. It also patches the Rust crate's `Cargo.toml` to use `{ workspace = true }` for shared deps.
@@ -24,7 +24,7 @@ create-malky-skill (standalone meta-skill for creating new skills)
 
 **`malky-infra-scaffolder`** generates `infra/docker-compose.yml` (dev DB on port 6432) and `infra/docker-compose.test.yml` (test DB on port 6433, tmpfs). Templates live in `malky-infra-scaffolder/resources/`.
 
-**`create-malky-skill`** is documentation-only (no scaffold.py). It describes the conventions for creating new skills.
+**`malky-skill-creator`** is documentation-only (no scaffold.py). It describes the conventions for creating new skills.
 
 ## Skill structure convention
 

@@ -1,12 +1,12 @@
 ---
-name: create-malky-skill
+name: malky-skill-creator
 description: Creates a new personal Claude Code skill following malky best practices. Use when asked to create, scaffold, or add a new skill.
 argument-hint: <skill-name> [purpose]
 disable-model-invocation: true
 allowed-tools: Bash, Write, Read, Glob
 ---
 
-# Create Malky Skill
+# Malky Skill Creator
 
 Scaffold a new personal Claude Code skill for Alexandre's setup.
 
