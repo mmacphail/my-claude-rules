@@ -53,6 +53,23 @@ Creates Docker Compose files and a `.env.example` for local development:
 | Dev Postgres | 6432 | Persistent named volume |
 | Test Postgres | 6433 | tmpfs (ephemeral) |
 
+### malky-domain-designer
+
+Guides an interactive DDD design session and produces a `domain-model.md` file at the project root. Covers aggregates, fields, JSONB schemas, statuses, state transitions, capabilities, and invariants.
+
+Use before `malky-domain-implementer` — this is the "design" half of the DDD workflow.
+
+### malky-domain-implementer
+
+Reads a signed-off `domain-model.md` and generates the full implementation for every aggregate:
+
+- **DB migrations** — typed columns, JSONB, status `CHECK` constraints, triggers, indexes
+- **Rust feature modules** — `domain.rs`, `repository.rs`, `handlers.rs`, `errors.rs`, `mod.rs` per aggregate, wired into the main router
+- **`openapi.json`** — OpenAPI 3.1 spec with capability-named routes and JSONB sub-schemas
+- **System tests** — lifecycle, happy-path, invariant-violation, and not-found tests per aggregate
+
+Does not redesign the domain — ambiguous decisions are documented with `// NOTE:` comments.
+
 ### malky-skill-creator
 
 A meta-skill that documents how to create new Claude Code skills following consistent conventions (naming, structure, SKILL.md format).

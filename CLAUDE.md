@@ -8,14 +8,16 @@ A collection of Claude Code skills for scaffolding production-ready Rust API pro
 
 ## Architecture
 
-Four skills with an orchestration hierarchy:
+Skills with an orchestration hierarchy:
 
 ```
 malky-api-scaffolder (master orchestrator)
 ├── malky-rust-scaffolder  (Rust/Axum/SQLx API crate)
 └── malky-infra-scaffolder (Docker Compose for dev/test Postgres)
 
-malky-skill-creator (standalone meta-skill for creating new skills)
+malky-domain-designer     (interactive DDD session → domain-model.md)
+malky-domain-implementer  (implements domain-model.md → migrations, Rust features, OpenAPI, tests)
+malky-skill-creator       (standalone meta-skill for creating new skills)
 ```
 
 **`malky-api-scaffolder`** is the primary entry point. Its `scaffold.py` calls the two sub-scaffolders, then adds workspace glue: root `Cargo.toml` (with `[workspace.dependencies]`), `justfile`, `README.md`, `.gitignore`. It also patches the Rust crate's `Cargo.toml` to use `{ workspace = true }` for shared deps.
@@ -24,7 +26,9 @@ malky-skill-creator (standalone meta-skill for creating new skills)
 
 **`malky-infra-scaffolder`** generates `infra/docker-compose.yml` (dev DB on port 6432) and `infra/docker-compose.test.yml` (test DB on port 6433, tmpfs). Templates live in `malky-infra-scaffolder/resources/`.
 
-**`malky-skill-creator`** is documentation-only (no scaffold.py). It describes the conventions for creating new skills.
+**`malky-domain-implementer`** has no scaffold.py — Claude does the work directly using Write/Edit tools. Given a signed-off `domain-model.md`, it generates DB migrations, Rust feature modules (domain/repository/handlers/errors), an `openapi.json`, and system tests for every aggregate.
+
+**`malky-skill-creator`** has no scaffold.py — it is purely instructional. It describes the conventions for creating new skills.
 
 ## Skill structure convention
 
