@@ -7,10 +7,9 @@ Usage:
 
 Arguments:
     project_name     Snake_case name for the project (e.g. my_api)
-    destination_dir  Where to create <project_name>/ (default: current directory)
+    destination_dir  Where to scaffold (default: current directory)
 
 What gets created:
-    <project_name>/
       Cargo.toml                  workspace root (shared deps)
       justfile                    build/run/test recipes
       README.md
@@ -67,20 +66,14 @@ def main():
 
     name = sys.argv[1]
     dest_base = Path(sys.argv[2]) if len(sys.argv) > 2 else Path.cwd()
-    project_dir = dest_base / name
+    project_dir = dest_base
 
-    if project_dir.exists():
-        print(f"Error: {project_dir} already exists.")
-        sys.exit(1)
-
-    project_dir.mkdir(parents=True)
+    project_dir.mkdir(parents=True, exist_ok=True)
     print(f"Scaffolding '{name}' into {project_dir} ...\n")
 
-    # 1. Rust crate into apps/<name>/, then rename to apps/api/
+    # 1. Rust crate directly into apps/api/
     apps_dir = project_dir / "apps"
-    run_scaffolder(RUST_SCAFFOLD, name, apps_dir, "malky-rust-scaffolder")
-    (apps_dir / name).rename(apps_dir / "api")
-    print(f"  renamed apps/{name}/ → apps/api/")
+    run_scaffolder(RUST_SCAFFOLD, name, apps_dir / "api", "malky-rust-scaffolder")
 
     # 2. Patch apps/api/Cargo.toml → workspace = true version
     print("\n[workspace patch]")
@@ -107,7 +100,6 @@ def main():
   {name} is ready
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  cd {project_dir}
   cp .env.example .env
   just db-up
   just run

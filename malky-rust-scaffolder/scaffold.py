@@ -9,7 +9,7 @@ Arguments:
     project_name     Rust crate name (snake_case, e.g. my_api)
     destination_dir  Where to create the project (default: current directory)
 
-The script creates <destination_dir>/<project_name>/ with all files in place.
+The script scaffolds files directly into <destination_dir> (default: current directory).
 """
 
 import sys
@@ -26,17 +26,19 @@ def substitute(content: str, name: str) -> str:
     return content.replace(PLACEHOLDER, name)
 
 
-def copy_tree(src: Path, dst: Path, name: str):
+def copy_tree(src: Path, dst: Path, name: str, root: Path = None):
+    if root is None:
+        root = dst
     dst.mkdir(parents=True, exist_ok=True)
     for item in src.iterdir():
         target = dst / item.name
         if item.is_dir():
-            copy_tree(item, target, name)
+            copy_tree(item, target, name, root)
         else:
             raw = item.read_text(encoding="utf-8")
             replaced = substitute(raw, name)
             target.write_text(replaced, encoding="utf-8")
-            print(f"  created {target.relative_to(dst.parent.parent if dst.parent.name == name else dst.parent)}")
+            print(f"  created {target.relative_to(root)}")
 
 
 def main():
@@ -46,19 +48,14 @@ def main():
 
     project_name = sys.argv[1]
     dest_base = Path(sys.argv[2]) if len(sys.argv) > 2 else Path.cwd()
-    project_dir = dest_base / project_name
-
-    if project_dir.exists():
-        print(f"Error: {project_dir} already exists.")
-        sys.exit(1)
+    project_dir = dest_base
 
     print(f"Scaffolding '{project_name}' into {project_dir} ...")
     copy_tree(RESOURCES_DIR, project_dir, project_name)
 
     print(f"""
-Done! Next steps:
+Done! Run:
 
-  cd {project_dir}
   cargo build
   cargo test                    # requires a running Postgres (see .env.example)
 
