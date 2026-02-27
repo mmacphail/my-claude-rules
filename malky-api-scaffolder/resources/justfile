@@ -1,0 +1,58 @@
+# Rootless Podman needs XDG_RUNTIME_DIR (not set in non-interactive shells on WSL2)
+export XDG_RUNTIME_DIR := `echo /run/user/$(id -u)`
+
+set dotenv-load
+
+# List available recipes
+default:
+    @just --list
+
+# ── Database ─────────────────────────────────────────────────────────────────
+
+# Start dev Postgres on :6432
+start-db:
+    podman compose -f infra/docker-compose.yml up -d
+
+# Stop dev Postgres
+stop-db:
+    podman compose -f infra/docker-compose.yml down
+
+# Start test Postgres on :6433 (tmpfs, ephemeral)
+start-test-db:
+    podman compose -f infra/docker-compose.test.yml up -d
+
+# Stop test Postgres
+stop-test-db:
+    podman compose -f infra/docker-compose.test.yml down
+
+# ── Build & run ───────────────────────────────────────────────────────────────
+
+# Build the workspace
+build:
+    cargo build --workspace
+
+# Run the API (requires DATABASE_URL in .env)
+run:
+    cargo run --bin __APP_NAME__
+
+# Run with hot-reload (requires cargo-watch: cargo install cargo-watch)
+dev:
+    cargo watch -x 'run --bin __APP_NAME__'
+
+# ── Quality ───────────────────────────────────────────────────────────────────
+
+# Run all tests (requires test DB on :6433)
+test:
+    cargo test --workspace
+
+# Cargo check (fast compilation check, no output binary)
+check:
+    cargo check --workspace
+
+# Format all code
+fmt:
+    cargo fmt --all
+
+# Lint with Clippy
+lint:
+    cargo clippy --workspace -- -D warnings

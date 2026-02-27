@@ -1,0 +1,14 @@
+name: __APP_NAME__-test
+
+services:
+  postgres_test:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: __APP_NAME___test
+      POSTGRES_PASSWORD: __APP_NAME___test
+      POSTGRES_DB: __APP_NAME___test
+    ports:
+      - "6433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    command: ["postgres", "-c", "log_statement=none"]

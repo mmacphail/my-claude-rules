@@ -1,0 +1,16 @@
+name: __APP_NAME__-dev
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: __APP_NAME__
+      POSTGRES_PASSWORD: __APP_NAME__
+      POSTGRES_DB: __APP_NAME__
+    ports:
+      - "6432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

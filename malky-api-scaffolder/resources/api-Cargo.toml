@@ -1,0 +1,30 @@
+[package]
+name = "__APP_NAME__"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "__APP_NAME__"
+path = "src/main.rs"
+
+[lib]
+name = "__APP_NAME__"
+path = "src/lib.rs"
+
+[dependencies]
+axum = { workspace = true }
+tokio = { workspace = true }
+sqlx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[dev-dependencies]
+axum-test = "18"
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
