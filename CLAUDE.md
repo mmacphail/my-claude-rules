@@ -17,6 +17,7 @@ malky-api-scaffolder (master orchestrator)
 
 malky-domain-designer     (interactive DDD session → domain-model.md)
 malky-domain-implementer  (implements domain-model.md → migrations, Rust features, OpenAPI, tests)
+malky-outbox-pattern      (Transactional Outbox Pattern → outbox migration, Debezium config, Avro schemas, Kafka topics)
 malky-skill-creator       (standalone meta-skill for creating new skills)
 ```
 
@@ -27,6 +28,8 @@ malky-skill-creator       (standalone meta-skill for creating new skills)
 **`malky-infra-scaffolder`** generates `infra/docker-compose.yml` (dev DB on port 6432) and `infra/docker-compose.test.yml` (test DB on port 6433, tmpfs). Templates live in `malky-infra-scaffolder/resources/`.
 
 **`malky-domain-implementer`** has no scaffold.py — Claude does the work directly using Write/Edit tools. Given a signed-off `domain-model.md`, it generates DB migrations, Rust feature modules (domain/repository/handlers/errors), an `openapi.json`, and system tests for every aggregate.
+
+**`malky-outbox-pattern`** has no scaffold.py — Claude does the work directly. Given answers to 9 context questions (domain, aggregate, company namespace, event types, aggregate fields, environment, Kafka cluster, schema version), it generates: the outbox table SQL migration, a fully-annotated Debezium connector JSON, two Avro schemas (event envelope + aggregate), a Kafka topic naming document, and an integration checklist.
 
 **`malky-skill-creator`** has no scaffold.py — it is purely instructional. It describes the conventions for creating new skills.
 

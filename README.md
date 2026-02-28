@@ -70,6 +70,18 @@ Reads a signed-off `domain-model.md` and generates the full implementation for e
 
 Does not redesign the domain — ambiguous decisions are documented with `// NOTE:` comments.
 
+### malky-outbox-pattern
+
+Implements the **Transactional Outbox Pattern** for any API (language-agnostic). Runs an interactive session to gather context, then generates:
+
+- **Outbox table migration** — `{domain}_{aggregate}_outbox` with a comment on every column explaining its CDC role and downstream impact
+- **Debezium connector JSON** — fully annotated config covering the PostgreSQL CDC connector, EventRouter SMT, Avro + Schema Registry serialization, replication slot management, snapshot mode, and error handling
+- **Avro schemas** — `{Aggregate}Event` (events topic envelope) and `{Aggregate}` (compacted topic state), with FORWARD_TRANSITIVE compatibility guidance
+- **Kafka topic naming doc** — naming convention, `kafka-topics.sh` creation commands, partition rationale, Schema Registry subject mapping, and monitoring metrics
+- **Integration checklist** — step-by-step guide for wiring the outbox insert into application service code
+
+Follows the [outbox pattern spec](malky-outbox-pattern/SKILL.md) covering: dual-write problem, ACID guarantees, naming conventions, schema evolution, error resilience, and consumer idempotence.
+
 ### malky-skill-creator
 
 A meta-skill that documents how to create new Claude Code skills following consistent conventions (naming, structure, SKILL.md format).
